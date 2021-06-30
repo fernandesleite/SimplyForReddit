@@ -2,4 +2,7 @@
     <string name="app_name">Simply for reddit</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="comments_count">%d comments</string>
+    <string name="author_u">u/%1$s</string>
+    <string name="subreddit_r">r/%1$s</string>
 </resources>

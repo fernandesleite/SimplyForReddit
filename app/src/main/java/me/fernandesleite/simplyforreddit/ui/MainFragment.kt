@@ -25,6 +25,7 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: HomeViewModel
     private val TAG = "MainFragment"
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
@@ -48,7 +49,8 @@ class MainFragment : Fragment() {
         if (!App.accountHelper.isAuthenticated()){
             viewModel.showFrontPage()
             viewModel.frontPageList.observe(viewLifecycleOwner, Observer {
-                adapter.addItems(it)
+                adapter.addItems(it.toMutableList())
+                isLoading = true
                 adapter.notifyDataSetChanged()
             })
         }
@@ -58,6 +60,7 @@ class MainFragment : Fragment() {
 
         fun loadMoreItems() {
             viewModel.nextPage()
+            isLoading = false
         }
 
         fun calcPositionToLoadItems(recyclerView: RecyclerView): Boolean {
@@ -68,11 +71,6 @@ class MainFragment : Fragment() {
             return firstVisible + visibleItemCount >= totalItemCount
         }
 
-        if (calcPositionToLoadItems(recyclerView)) {
-            Log.i(TAG, "onViewCreated: calc")
-            loadMoreItems()
-        }
-
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -80,7 +78,8 @@ class MainFragment : Fragment() {
                 } else if (dy > 0) {
 
                 }
-                if (calcPositionToLoadItems(recyclerView)) {
+                if (calcPositionToLoadItems(recyclerView) && isLoading) {
+                    Log.i(TAG, "onViewCreated: calc")
                     loadMoreItems()
 
                 }
