@@ -20,15 +20,10 @@ class SubmissionsAdapter : ListAdapter<Submission, SubmissionsAdapter.ViewHolder
         val thumbnail: ImageView = view.findViewById(R.id.thumbnail)
         val score: TextView = view.findViewById(R.id.score)
         val commentCount: TextView = view.findViewById(R.id.commentCount)
-
-        //        val time: TextView = view.findViewById(R.id.time)
         val subreddit: TextView = view.findViewById(R.id.subreddit)
-
     }
 
-    val list = mutableListOf<Submission>()
-
-
+    private val list = mutableListOf<Submission>()
     fun addItems(items: MutableList<Submission>) {
         if (!currentList.containsAll(items)) {
             list.addAll(items)
@@ -55,14 +50,16 @@ class SubmissionsAdapter : ListAdapter<Submission, SubmissionsAdapter.ViewHolder
         holder.commentCount.text = "${getItem(position).commentCount.toString()} comments"
         holder.score.text = getItem(position).score.toString()
         holder.subreddit.text = "r/${getItem(position).subreddit}"
+        holder.thumbnail.setImageDrawable(null)
         if (URLUtil.isValidUrl(getItem(position).thumbnail)) {
             Glide.with(holder.thumbnail.context)
                 .load(getItem(position).thumbnail)
                 .centerCrop()
                 .into(holder.thumbnail)
-            holder.title.layoutParams.width = 750
+            holder.thumbnail.layoutParams.width = 263
         } else {
-            holder.thumbnail.layoutParams.height = 0
+            Glide.with(holder.thumbnail.context).clear(holder.thumbnail)
+            holder.thumbnail.layoutParams.width = 0
         }
     }
 
