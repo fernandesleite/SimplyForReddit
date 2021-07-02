@@ -1,5 +1,6 @@
 package me.fernandesleite.simplyforreddit.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,7 @@ import com.bumptech.glide.Glide
 import me.fernandesleite.simplyforreddit.R
 import net.dean.jraw.models.Submission
 
-class SubmissionsAdapter : ListAdapter<Submission, SubmissionsAdapter.ViewHolder>(DiffCallback()) {
+class SubmissionsAdapter(private val clickListener: OnClickListener) : ListAdapter<Submission, SubmissionsAdapter.ViewHolder>(DiffCallback()) {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val author: TextView = view.findViewById(R.id.author)
         val title: TextView = view.findViewById(R.id.title)
@@ -21,6 +22,10 @@ class SubmissionsAdapter : ListAdapter<Submission, SubmissionsAdapter.ViewHolder
         val score: TextView = view.findViewById(R.id.score)
         val commentCount: TextView = view.findViewById(R.id.commentCount)
         val subreddit: TextView = view.findViewById(R.id.subreddit)
+    }
+
+    interface OnClickListener {
+        fun onSubmissionClick(submission: Submission)
     }
 
     private val list = mutableListOf<Submission>()
@@ -60,6 +65,11 @@ class SubmissionsAdapter : ListAdapter<Submission, SubmissionsAdapter.ViewHolder
         } else {
             Glide.with(holder.thumbnail.context).clear(holder.thumbnail)
             holder.thumbnail.layoutParams.width = 0
+        }
+
+        holder.itemView.setOnClickListener {
+            clickListener.onSubmissionClick(getItem(position))
+            Log.i("MainFragment", "onBindViewHolder: Clicado")
         }
     }
 

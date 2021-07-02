@@ -11,10 +11,11 @@ import java.util.*
 
 class App : Application(){
 
-    private lateinit var tokenStore: SharedPreferencesTokenStore
 
     companion object {
         lateinit var accountHelper: AccountHelper
+        private set
+        lateinit var tokenStore: SharedPreferencesTokenStore
         private set
     }
 
@@ -22,6 +23,7 @@ class App : Application(){
         super.onCreate()
         initTokenStore()
         initAccountHelper()
+        Log.i("MainFragment", "onCreate: App")
     }
 
     private fun initTokenStore() {

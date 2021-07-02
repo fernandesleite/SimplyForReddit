@@ -1,34 +1,31 @@
 package me.fernandesleite.simplyforreddit.ui
 
-import android.os.AsyncTask
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
 import me.fernandesleite.simplyforreddit.App
 import me.fernandesleite.simplyforreddit.R
-import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
-import net.dean.jraw.models.Subreddit
-import net.dean.jraw.models.SubredditSort
-import net.dean.jraw.pagination.DefaultPaginator
-import net.dean.jraw.pagination.Paginator
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
 
-    private lateinit var viewModel: HomeViewModel
+    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
+    private lateinit var adapter: SubmissionsAdapter
     private val TAG = "MainFragment"
     private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
+        adapter = SubmissionsAdapter(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -39,16 +36,19 @@ class MainFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        App.accountHelper.logout()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = SubmissionsAdapter()
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.adapter = adapter
 
-
         if (!App.accountHelper.isAuthenticated()){
-            viewModel.showFrontPage()
-            viewModel.frontPageList.observe(viewLifecycleOwner, Observer {
+            sharedSubmissionViewModel.showFrontPage()
+            sharedSubmissionViewModel.frontPageList.observe(this, Observer {
                 adapter.addItems(it.toMutableList())
                 isLoading = true
                 adapter.notifyDataSetChanged()
@@ -59,7 +59,7 @@ class MainFragment : Fragment() {
         // https://github.com/fernandesleite/meiha-android-movie-tracker/blob/master/app/src/main/java/com/moviedb/movieList/MovieListBaseFragment.kt
 
         fun loadMoreItems() {
-            viewModel.nextPage()
+            sharedSubmissionViewModel.nextPage()
             isLoading = false
         }
 
@@ -79,11 +79,14 @@ class MainFragment : Fragment() {
 
                 }
                 if (calcPositionToLoadItems(recyclerView) && isLoading) {
-                    Log.i(TAG, "onViewCreated: calc")
                     loadMoreItems()
-
                 }
             }
         })
+    }
+
+    override fun onSubmissionClick(submission: Submission) {
+        sharedSubmissionViewModel.setSubmission(submission)
+        findNavController().navigate(MainFragmentDirections.actionMainFragmentToSubmissionFragment(submission.id))
     }
 }
