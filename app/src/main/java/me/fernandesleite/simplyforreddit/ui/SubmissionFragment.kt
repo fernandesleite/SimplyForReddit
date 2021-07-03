@@ -1,5 +1,7 @@
 package me.fernandesleite.simplyforreddit.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,7 +12,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -40,7 +41,6 @@ class SubmissionFragment : Fragment() {
 
         sharedSubmissionViewModel.submission.observe(viewLifecycleOwner, { submissionInfo ->
             Log.i("TAG", "observe: ${submissionInfo.url}")
-
             title.text = submissionInfo.title
             author.text = "u/${submissionInfo.author}"
             commentCount.text = "${submissionInfo.commentCount.toString()} comments"
@@ -57,7 +57,7 @@ class SubmissionFragment : Fragment() {
                 Glide.with(thumbnail.context).clear(thumbnail)
                 thumbnail.layoutParams.width = 0
             }
-            thumbnail.setOnClickListener(View.OnClickListener {
+            thumbnail.setOnClickListener {
                 when (submissionInfo.postHint) {
                     "link" -> findNavController().navigate(
                         SubmissionFragmentDirections.actionSubmissionFragmentToBrowserFragment(
@@ -77,19 +77,22 @@ class SubmissionFragment : Fragment() {
                         )
                     }
                     "rich:video" -> {
-                        findNavController().navigate(
-                            SubmissionFragmentDirections.actionSubmissionFragmentToVideoPlayerFragment(
-                                submissionInfo.embeddedMedia?.oEmbed?.url
+                        Log.i("TAG", "onViewCreated: ${submissionInfo.domain}")
+                        Log.i("TAG", "onViewCreated: ${submissionInfo.embeddedMedia}")
+                        if (submissionInfo.domain == "youtube.com") {
+                            val intent =
+                                Intent(Intent.ACTION_VIEW, Uri.parse(submissionInfo.url))
+                            this.startActivity(intent)
+                        } else {
+                            findNavController().navigate(
+                                SubmissionFragmentDirections.actionSubmissionFragmentToBrowserFragment(
+                                    submissionInfo.url
+                                )
                             )
-                        )
+                        }
                     }
-                    "videogif" -> findNavController().navigate(
-                        SubmissionFragmentDirections.actionSubmissionFragmentToBrowserFragment(
-                            submissionInfo.url
-                        )
-                    )
                 }
-            })
+            }
         })
     }
 }
