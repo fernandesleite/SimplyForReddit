@@ -58,6 +58,7 @@ class SubmissionFragment : Fragment() {
                 thumbnail.layoutParams.width = 0
             }
             thumbnail.setOnClickListener {
+                Log.i("TAG", "onViewCreated: ${submissionInfo}")
                 when (submissionInfo.postHint) {
                     "link" -> findNavController().navigate(
                         SubmissionFragmentDirections.actionSubmissionFragmentToBrowserFragment(

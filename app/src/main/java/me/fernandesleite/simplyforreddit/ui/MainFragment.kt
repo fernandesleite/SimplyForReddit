@@ -1,15 +1,13 @@
 package me.fernandesleite.simplyforreddit.ui
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,12 +41,23 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        toolbar.title = "Front Page"
+        toolbar.inflateMenu(R.menu.toolbar_menu)
+        toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.search_button) {
+                findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
+                true
+            } else false
+        }
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.adapter = adapter
 
-        if (!App.accountHelper.isAuthenticated()){
+
+        if (!App.accountHelper.isAuthenticated()) {
             sharedSubmissionViewModel.showFrontPage()
             sharedSubmissionViewModel.frontPageList.observe(this, Observer {
+
                 adapter.addItems(it.toMutableList())
                 isLoading = true
                 adapter.notifyDataSetChanged()
@@ -87,6 +96,6 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
 
     override fun onSubmissionClick(submission: Submission) {
         sharedSubmissionViewModel.setSubmission(submission)
-        findNavController().navigate(MainFragmentDirections.actionMainFragmentToSubmissionFragment(submission.id))
+        findNavController().navigate(MainFragmentDirections.actionMainFragmentToSubmissionFragment("bnpkawrtlu871"))
     }
 }

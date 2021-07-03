@@ -29,12 +29,20 @@ open class SharedSubmissionViewModel : ViewModel(){
         _submission.value = submission
     }
 
+//    fun test(url: String) {
+//        uiScope.launch {
+//            withContext(Dispatchers.IO) {
+//                helper.reddit.http
+//            }
+//        }
+//    }
+
     fun showFrontPage() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 helper.switchToUserless()
                 val paginationBuilder: DefaultPaginator.Builder<Submission, SubredditSort> =
-                    helper.reddit.subreddit("gifs").posts()
+                    helper.reddit.frontPage()
                 paginator = paginationBuilder.build()
                 val fp: Listing<Submission> = paginator.next()
                 _frontPageList.postValue(fp)
