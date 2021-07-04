@@ -59,12 +59,11 @@ class SubmissionsAdapter(private val clickListener: OnClickListener) :
         if (URLUtil.isValidUrl(getItem(position).thumbnail)) {
             Glide.with(holder.thumbnail.context)
                 .load(getItem(position).thumbnail)
-                .centerCrop()
                 .into(holder.thumbnail)
-            holder.thumbnail.layoutParams.width = 263
+            holder.thumbnail.visibility = View.VISIBLE
         } else {
             Glide.with(holder.thumbnail.context).clear(holder.thumbnail)
-            holder.thumbnail.layoutParams.width = 0
+            holder.thumbnail.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener {
