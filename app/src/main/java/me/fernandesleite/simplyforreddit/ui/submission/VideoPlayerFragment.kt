@@ -1,18 +1,15 @@
-package me.fernandesleite.simplyforreddit
+package me.fernandesleite.simplyforreddit.ui.submission
 
-import android.media.browse.MediaBrowser
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.ui.StyledPlayerControlView
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import me.fernandesleite.simplyforreddit.R
 
 
 class VideoPlayerFragment : Fragment() {

@@ -1,4 +1,4 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.submission
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.navigation.fragment.navArgs
@@ -15,12 +14,7 @@ import me.fernandesleite.simplyforreddit.R
 
 class BrowserFragment : Fragment() {
 
-
     val args: BrowserFragmentArgs by navArgs()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

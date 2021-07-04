@@ -1,6 +1,5 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.submission
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,8 @@ import com.bumptech.glide.Glide
 import me.fernandesleite.simplyforreddit.R
 import net.dean.jraw.models.Submission
 
-class SubmissionsAdapter(private val clickListener: OnClickListener) : ListAdapter<Submission, SubmissionsAdapter.ViewHolder>(DiffCallback()) {
+class SubmissionsAdapter(private val clickListener: OnClickListener) :
+    ListAdapter<Submission, SubmissionsAdapter.ViewHolder>(DiffCallback()) {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val author: TextView = view.findViewById(R.id.author)
         val title: TextView = view.findViewById(R.id.title)
@@ -69,7 +69,6 @@ class SubmissionsAdapter(private val clickListener: OnClickListener) : ListAdapt
 
         holder.itemView.setOnClickListener {
             clickListener.onSubmissionClick(getItem(position))
-            Log.i("MainFragment", "onBindViewHolder: Clicado")
         }
     }
 

@@ -1,4 +1,4 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.App
 import me.fernandesleite.simplyforreddit.R
+import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
 
 class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
@@ -56,7 +57,9 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
 
         if (!App.accountHelper.isAuthenticated()) {
             sharedSubmissionViewModel.showFrontPage()
-            sharedSubmissionViewModel.frontPageList.observe(this, Observer {
+
+            // workaround using the fragment as a owner to maintain recyclerview pagination after leaving screen
+            sharedSubmissionViewModel.frontPageList.observe(this, {
 
                 adapter.addItems(it.toMutableList())
                 isLoading = true
@@ -83,10 +86,6 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy < 0) {
-                } else if (dy > 0) {
-
-                }
                 if (calcPositionToLoadItems(recyclerView) && isLoading) {
                     loadMoreItems()
                 }
@@ -96,6 +95,6 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
 
     override fun onSubmissionClick(submission: Submission) {
         sharedSubmissionViewModel.setSubmission(submission)
-        findNavController().navigate(MainFragmentDirections.actionMainFragmentToSubmissionFragment("bnpkawrtlu871"))
+        findNavController().navigate(R.id.action_mainFragment_to_submissionFragment)
     }
 }

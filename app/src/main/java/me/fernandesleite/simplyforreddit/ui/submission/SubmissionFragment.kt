@@ -1,9 +1,8 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.submission
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +15,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import me.fernandesleite.simplyforreddit.R
+import me.fernandesleite.simplyforreddit.ui.home.SharedSubmissionViewModel
 
 class SubmissionFragment : Fragment() {
-
-    val args: SubmissionFragmentArgs by navArgs()
 
     private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
 
@@ -40,7 +38,6 @@ class SubmissionFragment : Fragment() {
         val subreddit: TextView = view.findViewById(R.id.subreddit)
 
         sharedSubmissionViewModel.submission.observe(viewLifecycleOwner, { submissionInfo ->
-            Log.i("TAG", "observe: ${submissionInfo.url}")
             title.text = submissionInfo.title
             author.text = "u/${submissionInfo.author}"
             commentCount.text = "${submissionInfo.commentCount.toString()} comments"
@@ -58,7 +55,6 @@ class SubmissionFragment : Fragment() {
                 thumbnail.layoutParams.width = 0
             }
             thumbnail.setOnClickListener {
-                Log.i("TAG", "onViewCreated: ${submissionInfo}")
                 when (submissionInfo.postHint) {
                     "link" -> findNavController().navigate(
                         SubmissionFragmentDirections.actionSubmissionFragmentToBrowserFragment(
@@ -78,8 +74,6 @@ class SubmissionFragment : Fragment() {
                         )
                     }
                     "rich:video" -> {
-                        Log.i("TAG", "onViewCreated: ${submissionInfo.domain}")
-                        Log.i("TAG", "onViewCreated: ${submissionInfo.embeddedMedia}")
                         if (submissionInfo.domain == "youtube.com") {
                             val intent =
                                 Intent(Intent.ACTION_VIEW, Uri.parse(submissionInfo.url))

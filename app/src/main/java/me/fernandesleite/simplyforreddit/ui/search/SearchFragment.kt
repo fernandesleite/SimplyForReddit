@@ -1,7 +1,6 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 
@@ -31,6 +32,10 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        NavigationUI.setupWithNavController(
+            toolbar,
+            NavHostFragment.findNavController(requireParentFragment())
+        )
         val recyclerView = view.findViewById<RecyclerView>(R.id.searchResults)
         recyclerView.adapter = adapter
         toolbar.inflateMenu(R.menu.search_bar)
@@ -42,15 +47,11 @@ class SearchFragment : Fragment() {
             requestFocus()
             setOnQueryTextListener(object: SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    Log.i("SearchFragment", "onQueryTextSubmit: ${query}")
                     return false
                 }
-
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    Log.i("SearchFragment", "onQueryTextChange: ${newText}")
-                    viewModel.showSearch(newText!!)
+                    viewModel.showSearch(newText ?: "")
                     viewModel.subredditSearchResults.observe(viewLifecycleOwner, {
-                        Log.i("SearchFragment", "observe: ${it[0].name}")
                         adapter.submitList(it)
                         adapter.notifyDataSetChanged()
                     })

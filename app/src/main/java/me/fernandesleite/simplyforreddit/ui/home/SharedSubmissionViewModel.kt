@@ -1,6 +1,5 @@
-package me.fernandesleite.simplyforreddit.ui
+package me.fernandesleite.simplyforreddit.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +13,7 @@ import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.pagination.DefaultPaginator
 
-open class SharedSubmissionViewModel : ViewModel(){
+open class SharedSubmissionViewModel : ViewModel() {
     private lateinit var paginator: DefaultPaginator<Submission>
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val helper = App.accountHelper
@@ -28,14 +27,6 @@ open class SharedSubmissionViewModel : ViewModel(){
     fun setSubmission(submission: Submission) {
         _submission.value = submission
     }
-
-//    fun test(url: String) {
-//        uiScope.launch {
-//            withContext(Dispatchers.IO) {
-//                helper.reddit.http
-//            }
-//        }
-//    }
 
     fun showFrontPage() {
         uiScope.launch {

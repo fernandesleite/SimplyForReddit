@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="me.fernandesleite.simplyforreddit.ui.MainFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.home.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -22,12 +22,9 @@
     </fragment>
     <fragment
         android:id="@+id/submissionFragment"
-        android:name="me.fernandesleite.simplyforreddit.ui.SubmissionFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.submission.SubmissionFragment"
         android:label="submission_fragment"
         tools:layout="@layout/submission_fragment" >
-        <argument
-            android:name="submission_id"
-            app:argType="string" />
         <action
             android:id="@+id/action_submissionFragment_to_browserFragment"
             app:destination="@id/browserFragment" />
@@ -40,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/browserFragment"
-        android:name="me.fernandesleite.simplyforreddit.ui.BrowserFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.submission.BrowserFragment"
         android:label="fragment_browser"
         tools:layout="@layout/fragment_browser" >
         <argument
@@ -49,14 +46,14 @@
     </fragment>
     <fragment
         android:id="@+id/imageViewFragment"
-        android:name="me.fernandesleite.simplyforreddit.ui.ImageViewFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.submission.ImageViewFragment"
         android:label="fragment_image_view"
         tools:layout="@layout/fragment_image_view" >
         <argument android:name="url" />
     </fragment>
     <fragment
         android:id="@+id/videoPlayerFragment"
-        android:name="me.fernandesleite.simplyforreddit.VideoPlayerFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.submission.VideoPlayerFragment"
         android:label="fragment_video_player"
         tools:layout="@layout/fragment_video_player" >
         <argument
@@ -66,7 +63,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="me.fernandesleite.simplyforreddit.ui.SearchFragment"
+        android:name="me.fernandesleite.simplyforreddit.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
 </navigation>
