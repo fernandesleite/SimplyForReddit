@@ -9,8 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import net.dean.jraw.models.SubredditSearchResult
+import net.dean.jraw.references.SubredditReference
 
-class SearchAdapter: ListAdapter<SubredditSearchResult, SearchAdapter.ViewHolder>(DiffCallback()) {
+class SearchAdapter(private val clickListener: OnClickListener): ListAdapter<SubredditSearchResult, SearchAdapter.ViewHolder>(DiffCallback()) {
+    interface OnClickListener{
+        fun onSubredditClick(subredditName: String)
+    }
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val subredditName: TextView = view.findViewById(R.id.subredditName)
     }
@@ -32,6 +36,8 @@ class SearchAdapter: ListAdapter<SubredditSearchResult, SearchAdapter.ViewHolder
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.subredditName.text = getItem(position).name
-
+        holder.itemView.setOnClickListener {
+            clickListener.onSubredditClick(getItem(position).name)
+        }
     }
 }

@@ -9,11 +9,12 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), SearchAdapter.OnClickListener {
 
     private lateinit var viewModel: SearchViewModel
     private lateinit var adapter: SearchAdapter
@@ -22,7 +23,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        adapter = SearchAdapter()
+        adapter = SearchAdapter(this)
         viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
@@ -58,5 +59,9 @@ class SearchFragment : Fragment() {
 
             })
         }
+    }
+
+    override fun onSubredditClick(subredditName: String) {
+        findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToSubredditFragment(subredditName))
     }
 }

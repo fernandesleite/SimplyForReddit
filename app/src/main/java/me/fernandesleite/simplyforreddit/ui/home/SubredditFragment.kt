@@ -1,26 +1,31 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
 import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
 
-class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
+class SubredditFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
+
+    val args: SubredditFragmentArgs by navArgs()
 
     private val sharedSubmissionViewModel: SharedSubmissionViewModelBase by activityViewModels()
     private lateinit var adapter: SubmissionsAdapter
-    private val TAG = "MainFragment"
 
     override var isLoading = false
     override fun loadMoreItems() {
-        sharedSubmissionViewModel.nextPageFrontPage()
+        sharedSubmissionViewModel.nextPageSubreddit()
         isLoading = false
     }
 
@@ -33,17 +38,19 @@ class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return inflater.inflate(R.layout.fragment_subreddit, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.title = "Front Page"
+        sharedSubmissionViewModel.showSubreddit(args.subreddit)
+
+        toolbar.title = args.subreddit
         toolbar.inflateMenu(R.menu.toolbar_menu)
         toolbar.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.search_button) {
-                findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
+                findNavController().navigate(R.id.action_subredditFragment_to_searchFragment)
                 true
             } else false
         }
@@ -51,7 +58,7 @@ class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
         recyclerView.adapter = adapter
 
         // workaround using the fragment as a owner to maintain recyclerview pagination after leaving screen
-        sharedSubmissionViewModel.listOfFrontPageSubmissions.observe(this, {
+        sharedSubmissionViewModel.listOfSubredditSubmissions.observe(this, {
             adapter.submitList(it)
             isLoading = true
             adapter.notifyDataSetChanged()
@@ -63,6 +70,6 @@ class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
 
     override fun onSubmissionClick(submission: Submission) {
         sharedSubmissionViewModel.setSubmission(submission)
-        findNavController().navigate(R.id.action_mainFragment_to_submissionFragment)
+        findNavController().navigate(R.id.action_subredditFragment_to_submissionFragment)
     }
 }

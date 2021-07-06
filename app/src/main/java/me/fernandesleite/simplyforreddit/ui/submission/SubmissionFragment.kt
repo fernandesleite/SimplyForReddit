@@ -12,14 +12,13 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import me.fernandesleite.simplyforreddit.R
-import me.fernandesleite.simplyforreddit.ui.home.SharedSubmissionViewModel
+import me.fernandesleite.simplyforreddit.ui.home.SharedSubmissionViewModelBase
 
 class SubmissionFragment : Fragment() {
 
-    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
+    private val sharedSubmissionViewModel: SharedSubmissionViewModelBase by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
