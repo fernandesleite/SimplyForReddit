@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.fernandesleite.simplyforreddit.App
-import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.pagination.DefaultPaginator
@@ -17,26 +16,36 @@ open class SharedSubmissionViewModel : ViewModel() {
     private lateinit var paginator: DefaultPaginator<Submission>
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val helper = App.accountHelper
-    private val _frontPageList = MutableLiveData<Listing<Submission>>()
+    private val listSubmission = mutableListOf<Submission>()
+
     private val _submission = MutableLiveData<Submission>()
     val submission: LiveData<Submission>
         get() = _submission
-    val frontPageList: LiveData<Listing<Submission>>
-        get() = _frontPageList
+
+    private val _listOfFrontPageSubmissions = MutableLiveData<List<Submission>>()
+    val listOfFrontPageSubmissions: LiveData<List<Submission>>
+        get() = _listOfFrontPageSubmissions
 
     fun setSubmission(submission: Submission) {
         _submission.value = submission
+    }
+
+    init {
+        showFrontPage()
     }
 
     fun showFrontPage() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 helper.switchToUserless()
+
                 val paginationBuilder: DefaultPaginator.Builder<Submission, SubredditSort> =
                     helper.reddit.frontPage()
                 paginator = paginationBuilder.build()
-                val fp: Listing<Submission> = paginator.next()
-                _frontPageList.postValue(fp)
+                paginator.next().forEach {
+                    listSubmission.add(it)
+                }
+                _listOfFrontPageSubmissions.postValue(listSubmission)
             }
         }
     }
@@ -44,15 +53,10 @@ open class SharedSubmissionViewModel : ViewModel() {
     fun nextPage() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                val fp: Listing<Submission> = paginator.next()
-                _frontPageList.postValue(fp)
-            }
-        }
-    }
-
-    fun showSubmission(submission: Submission) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
+                paginator.next().forEach {
+                    listSubmission.add(it)
+                }
+                _listOfFrontPageSubmissions.postValue(listSubmission)
             }
         }
     }

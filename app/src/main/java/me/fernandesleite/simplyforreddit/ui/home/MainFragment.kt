@@ -7,11 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import me.fernandesleite.simplyforreddit.App
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
@@ -35,10 +33,6 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        App.accountHelper.logout()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -54,18 +48,12 @@ class MainFragment : Fragment(), SubmissionsAdapter.OnClickListener {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.adapter = adapter
 
-
-        if (!App.accountHelper.isAuthenticated()) {
-            sharedSubmissionViewModel.showFrontPage()
-
-            // workaround using the fragment as a owner to maintain recyclerview pagination after leaving screen
-            sharedSubmissionViewModel.frontPageList.observe(this, {
-
-                adapter.addItems(it.toMutableList())
-                isLoading = true
-                adapter.notifyDataSetChanged()
-            })
-        }
+        // workaround using the fragment as a owner to maintain recyclerview pagination after leaving screen
+        sharedSubmissionViewModel.listOfFrontPageSubmissions.observe(this, {
+            adapter.submitList(it)
+            isLoading = true
+            adapter.notifyDataSetChanged()
+        })
 
         // Code to calculate when the user is seeing the last item copied from my app Meiha:
         // https://github.com/fernandesleite/meiha-android-movie-tracker/blob/master/app/src/main/java/com/moviedb/movieList/MovieListBaseFragment.kt
