@@ -2,6 +2,8 @@ package me.fernandesleite.simplyforreddit
 
 import android.app.Application
 import android.util.Log
+import me.fernandesleite.simplyforreddit.di.adaptersModule
+import me.fernandesleite.simplyforreddit.di.mainModule
 import me.fernandesleite.simplyforreddit.util.MalformedJsonInterceptor
 import net.dean.jraw.RedditClient
 import net.dean.jraw.android.*
@@ -9,6 +11,9 @@ import net.dean.jraw.http.LogAdapter
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.oauth.AccountHelper
 import okhttp3.OkHttpClient
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import java.util.*
 
 class App : Application() {
@@ -25,6 +30,11 @@ class App : Application() {
         super.onCreate()
         initTokenStore()
         initAccountHelper()
+        startKoin {
+            androidLogger()
+            androidContext(this@App)
+            modules(mainModule, adaptersModule)
+        }
     }
 
     private fun initTokenStore() {

@@ -13,18 +13,21 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class SearchFragment : Fragment(), SearchAdapter.OnClickListener {
 
-    private lateinit var viewModel: SearchViewModel
-    private lateinit var adapter: SearchAdapter
+    private val viewModel: SearchViewModel by viewModel()
+    private val adapter: SearchAdapter by inject {
+        parametersOf(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        adapter = SearchAdapter(this)
-        viewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
         return inflater.inflate(R.layout.fragment_search, container, false)
     }
 

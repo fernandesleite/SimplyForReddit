@@ -51,9 +51,11 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     // JRAW
     implementation 'net.dean.jraw:JRAW-Android:1.1.0'
-    // Dagger2
-    implementation 'com.google.dagger:dagger:2.35.1'
-    kapt 'com.google.dagger:dagger-compiler:2.35.1'
+
+    // Koin
+    implementation "io.insert-koin:koin-core:3.1.2"
+    testImplementation "io.insert-koin:koin-test:3.1.2"
+    implementation "io.insert-koin:koin-android:3.1.2"
 
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")

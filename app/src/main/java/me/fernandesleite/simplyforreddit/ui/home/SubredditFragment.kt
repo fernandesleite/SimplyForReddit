@@ -1,8 +1,6 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
@@ -20,7 +17,7 @@ class SubredditFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener
 
     val args: SubredditFragmentArgs by navArgs()
 
-    private val sharedSubmissionViewModel: SharedSubmissionViewModelBase by activityViewModels()
+    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
     private lateinit var adapter: SubmissionsAdapter
 
     override var isLoading = false

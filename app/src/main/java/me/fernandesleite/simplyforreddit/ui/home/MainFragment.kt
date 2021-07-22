@@ -11,22 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
+import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
 
 class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
 
-    private val sharedSubmissionViewModel: SharedSubmissionViewModelBase by activityViewModels()
-    private lateinit var adapter: SubmissionsAdapter
+    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
+    private val adapter: SubmissionsAdapter by inject {
+        parametersOf(this)
+    }
     private val TAG = "MainFragment"
 
     override var isLoading = false
     override fun loadMoreItems() {
         sharedSubmissionViewModel.nextPageFrontPage()
         isLoading = false
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        adapter = SubmissionsAdapter(this)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(

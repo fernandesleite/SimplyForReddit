@@ -11,7 +11,7 @@ import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.pagination.DefaultPaginator
 
-open class SharedSubmissionViewModelBase : SharedViewModelBase() {
+open class SharedSubmissionViewModel : SharedViewModelBase() {
     private lateinit var paginatorFrontPage: DefaultPaginator<Submission>
     private lateinit var paginatorSubreddit: DefaultPaginator<Submission>
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -49,6 +49,7 @@ open class SharedSubmissionViewModelBase : SharedViewModelBase() {
                 paginatorFrontPage.next().forEach {
                     localListFrontPageSubmissions.add(it)
                 }
+                helper.reddit.requestStub()
                 _listOfFrontPageSubmissions.postValue(localListFrontPageSubmissions)
             }
         }
