@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class SubredditFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
 
     val args: SubredditFragmentArgs by navArgs()
 
-    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
+    private val sharedSubmissionViewModel: SharedSubmissionViewModel by sharedViewModel()
     private lateinit var adapter: SubmissionsAdapter
 
     override var isLoading = false

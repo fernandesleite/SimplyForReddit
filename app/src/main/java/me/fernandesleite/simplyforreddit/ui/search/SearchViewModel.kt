@@ -9,14 +9,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.fernandesleite.simplyforreddit.App
+import me.fernandesleite.simplyforreddit.repository.RedditRepository
 import net.dean.jraw.models.*
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.pagination.SubredditSearchPaginator
 
-class SearchViewModel: ViewModel() {
-    val redditClient = App.accountHelper.reddit
-    val uiScope = CoroutineScope(Dispatchers.Main)
+class SearchViewModel(private val repository: RedditRepository): ViewModel() {
+    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private val _subredditSearchResults = MutableLiveData<List<SubredditSearchResult>>()
     val subredditSearchResults: LiveData<List<SubredditSearchResult>>
@@ -25,8 +25,7 @@ class SearchViewModel: ViewModel() {
     fun showSearch(query: String) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                val results = redditClient.searchSubredditsByName(query)
-                _subredditSearchResults.postValue(results)
+                _subredditSearchResults.postValue(repository.getSearchSubredditResults(query))
             }
         }
     }

@@ -12,11 +12,12 @@ import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
 class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
 
-    private val sharedSubmissionViewModel: SharedSubmissionViewModel by activityViewModels()
+    private val sharedSubmissionViewModel: SharedSubmissionViewModel by sharedViewModel()
     private val adapter: SubmissionsAdapter by inject {
         parametersOf(this)
     }

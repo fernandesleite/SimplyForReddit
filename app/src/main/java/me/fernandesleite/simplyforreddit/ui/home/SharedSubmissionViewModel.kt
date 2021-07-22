@@ -1,21 +1,21 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.fernandesleite.simplyforreddit.App
+import me.fernandesleite.simplyforreddit.repository.RedditRepository
 import net.dean.jraw.models.Submission
-import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.pagination.DefaultPaginator
 
-open class SharedSubmissionViewModel : SharedViewModelBase() {
+class SharedSubmissionViewModel(private val repository: RedditRepository) :
+    SharedViewModelBase() {
     private lateinit var paginatorFrontPage: DefaultPaginator<Submission>
     private lateinit var paginatorSubreddit: DefaultPaginator<Submission>
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val helper = App.accountHelper
     private val localListFrontPageSubmissions = mutableListOf<Submission>()
     private val localListSubredditSubmissions = mutableListOf<Submission>()
 
@@ -42,14 +42,10 @@ open class SharedSubmissionViewModel : SharedViewModelBase() {
     private fun showFrontPage() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                helper.switchToUserless()
-                val paginationBuilder: DefaultPaginator.Builder<Submission, SubredditSort> =
-                    helper.reddit.frontPage()
-                paginatorFrontPage = paginationBuilder.build()
+                paginatorFrontPage = repository.getFrontPagePosts()
                 paginatorFrontPage.next().forEach {
                     localListFrontPageSubmissions.add(it)
                 }
-                helper.reddit.requestStub()
                 _listOfFrontPageSubmissions.postValue(localListFrontPageSubmissions)
             }
         }
@@ -69,9 +65,8 @@ open class SharedSubmissionViewModel : SharedViewModelBase() {
         }
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                val paginationBuilder: DefaultPaginator.Builder<Submission, SubredditSort> =
-                    helper.reddit.subreddit(subredditName).posts()
-                paginatorSubreddit = paginationBuilder.build()
+                paginatorSubreddit = repository.getSubredditPosts(subredditName)
+                Log.i("TAG", paginatorSubreddit.pageNumber.toString())
                 paginatorSubreddit.next().forEach {
                     localListSubredditSubmissions.add(it)
                 }

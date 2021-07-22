@@ -1,5 +1,6 @@
 package me.fernandesleite.simplyforreddit.di
 
+import me.fernandesleite.simplyforreddit.repository.RedditRepository
 import me.fernandesleite.simplyforreddit.ui.home.SharedSubmissionViewModel
 import me.fernandesleite.simplyforreddit.ui.search.SearchAdapter
 import me.fernandesleite.simplyforreddit.ui.search.SearchViewModel
@@ -17,10 +18,14 @@ val adaptersModule = module {
 }
 
 val mainModule = module {
-    viewModel {
-        SearchViewModel()
+
+    single {
+        RedditRepository()
     }
     viewModel {
-        SharedSubmissionViewModel()
+        SearchViewModel(get())
+    }
+    viewModel {
+        SharedSubmissionViewModel(get())
     }
 }
