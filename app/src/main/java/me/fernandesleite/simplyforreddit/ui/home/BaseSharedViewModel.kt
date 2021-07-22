@@ -10,10 +10,10 @@ import me.fernandesleite.simplyforreddit.repository.RedditRepository
 import net.dean.jraw.models.Submission
 import net.dean.jraw.pagination.DefaultPaginator
 
-open class SharedViewModelBase() : ViewModel() {
+open class BaseSharedViewModel() : ViewModel() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
-    fun nextPageBase(
+    fun updateCurrentList(
         listLiveData: MutableLiveData<List<Submission>>,
         viewModelList: MutableList<Submission>,
         paginator: DefaultPaginator<Submission>

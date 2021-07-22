@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
@@ -15,7 +14,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.core.parameter.parametersOf
 
-class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
+class MainFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener {
 
     private val sharedSubmissionViewModel: SharedSubmissionViewModel by sharedViewModel()
     private val adapter: SubmissionsAdapter by inject {
@@ -25,7 +24,7 @@ class MainFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
 
     override var isLoading = false
     override fun loadMoreItems() {
-        sharedSubmissionViewModel.nextPageFrontPage()
+        sharedSubmissionViewModel.updateFrontPage()
         isLoading = false
     }
 

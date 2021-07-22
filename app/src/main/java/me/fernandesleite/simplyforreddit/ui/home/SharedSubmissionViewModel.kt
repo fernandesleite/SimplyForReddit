@@ -1,6 +1,5 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +11,7 @@ import net.dean.jraw.models.Submission
 import net.dean.jraw.pagination.DefaultPaginator
 
 class SharedSubmissionViewModel(private val repository: RedditRepository) :
-    SharedViewModelBase() {
+    BaseSharedViewModel() {
     private lateinit var paginatorFrontPage: DefaultPaginator<Submission>
     private lateinit var paginatorSubreddit: DefaultPaginator<Submission>
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -43,20 +42,17 @@ class SharedSubmissionViewModel(private val repository: RedditRepository) :
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 paginatorFrontPage = repository.getFrontPagePosts()
-                paginatorFrontPage.next().forEach {
-                    localListFrontPageSubmissions.add(it)
-                }
-                _listOfFrontPageSubmissions.postValue(localListFrontPageSubmissions)
+                updateFrontPage()
             }
         }
     }
 
-    fun nextPageFrontPage() {
-        nextPageBase(_listOfFrontPageSubmissions, localListFrontPageSubmissions, paginatorFrontPage)
+    fun updateFrontPage() {
+        updateCurrentList(_listOfFrontPageSubmissions, localListFrontPageSubmissions, paginatorFrontPage)
     }
 
-    fun nextPageSubreddit() {
-        nextPageBase(_listOfSubredditSubmissions, localListSubredditSubmissions, paginatorSubreddit)
+    fun updateSubreddit() {
+        updateCurrentList(_listOfSubredditSubmissions, localListSubredditSubmissions, paginatorSubreddit)
     }
 
     fun showSubreddit(subredditName: String) {
@@ -66,11 +62,7 @@ class SharedSubmissionViewModel(private val repository: RedditRepository) :
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 paginatorSubreddit = repository.getSubredditPosts(subredditName)
-                Log.i("TAG", paginatorSubreddit.pageNumber.toString())
-                paginatorSubreddit.next().forEach {
-                    localListSubredditSubmissions.add(it)
-                }
-                _listOfSubredditSubmissions.postValue(localListSubredditSubmissions)
+                updateSubreddit()
             }
         }
     }

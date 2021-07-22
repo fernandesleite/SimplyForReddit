@@ -1,6 +1,7 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class SubredditFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener {
+class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener {
 
     val args: SubredditFragmentArgs by navArgs()
 
@@ -23,7 +24,7 @@ class SubredditFragment : MainFragmentBase(), SubmissionsAdapter.OnClickListener
 
     override var isLoading = false
     override fun loadMoreItems() {
-        sharedSubmissionViewModel.nextPageSubreddit()
+        sharedSubmissionViewModel.updateSubreddit()
         isLoading = false
     }
 
