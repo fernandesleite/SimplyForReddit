@@ -1,13 +1,19 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import me.fernandesleite.simplyforreddit.R
+import me.fernandesleite.simplyforreddit.ui.MainActivity
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
 import org.koin.android.ext.android.inject
@@ -38,14 +44,29 @@ class MainFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-        toolbar.title = "Front Page"
-        toolbar.inflateMenu(R.menu.toolbar_menu)
-        toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.search_button) {
-                findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
-                true
-            } else false
+
+        toolbar.apply {
+            title = "Front Page"
+            toolbar.setNavigationOnClickListener {
+                val act = activity as MainActivity
+                act.openDrawer()
+            }
+            inflateMenu(R.menu.toolbar_menu)
+            setOnMenuItemClickListener { item ->
+                if (item.itemId == R.id.search_button) {
+                    findNavController().navigate(R.id.action_mainFragment_to_searchFragment)
+                    true
+                } else if (item.itemId == R.id.filter) {
+                    val popup = PopupMenu(context, toolbar, Gravity.END)
+                    popup.inflate(R.menu.toolbar_filter)
+                    popup.show()
+                    true
+                }
+                else false
+            }
+
         }
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.adapter = adapter
 

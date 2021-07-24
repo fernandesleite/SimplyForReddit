@@ -12,6 +12,8 @@ class RedditRepository {
 
     private fun switchToAnon() = helper.switchToUserless()
 
+    fun isAuthenticated() = helper.reddit.requireAuthenticatedUser()
+
     fun getFrontPagePosts(): DefaultPaginator<Submission> {
         switchToAnon()
         helper.reddit.requestStub()

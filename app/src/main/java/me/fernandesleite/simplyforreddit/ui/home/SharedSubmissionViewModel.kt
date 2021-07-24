@@ -66,4 +66,7 @@ class SharedSubmissionViewModel(private val repository: RedditRepository) :
             }
         }
     }
+
+    fun isAuthenticated(): String =  repository.isAuthenticated()
+
 }

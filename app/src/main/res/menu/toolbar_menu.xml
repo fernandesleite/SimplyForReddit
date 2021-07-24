@@ -5,5 +5,12 @@
         android:id="@+id/search_button"
         android:icon="@drawable/ic_baseline_search_24"
         android:title="@string/app_name"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_baseline_sort_24"
+        android:title="Filter"
+        app:showAsAction="ifRoom">
+    </item>
 </menu>
+
