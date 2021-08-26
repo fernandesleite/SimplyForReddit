@@ -65,7 +65,6 @@ class SubmissionsAdapter(private val clickListener: OnClickListener) :
             Glide.with(holder.thumbnail.context).clear(holder.thumbnail)
             holder.thumbnail.visibility = View.GONE
         }
-
         holder.itemView.setOnClickListener {
             clickListener.onSubmissionClick(getItem(position))
         }

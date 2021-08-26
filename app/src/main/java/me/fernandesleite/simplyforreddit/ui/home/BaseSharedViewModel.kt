@@ -11,7 +11,7 @@ import net.dean.jraw.models.Submission
 import net.dean.jraw.pagination.DefaultPaginator
 
 open class BaseSharedViewModel() : ViewModel() {
-    private val uiScope = CoroutineScope(Dispatchers.Main)
+    val uiScope = CoroutineScope(Dispatchers.Main)
 
     fun updateCurrentList(
         listLiveData: MutableLiveData<List<Submission>>,

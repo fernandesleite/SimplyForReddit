@@ -9,10 +9,10 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val adaptersModule = module {
-    single { (clickListener: SubmissionsAdapter.OnClickListener) ->
+    factory { (clickListener: SubmissionsAdapter.OnClickListener) ->
         SubmissionsAdapter(clickListener)
     }
-    single { (clickListener: SearchAdapter.OnClickListener) ->
+    factory { (clickListener: SearchAdapter.OnClickListener) ->
         SearchAdapter(clickListener)
     }
 }

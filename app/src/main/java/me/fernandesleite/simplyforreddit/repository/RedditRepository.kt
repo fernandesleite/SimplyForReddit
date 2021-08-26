@@ -22,6 +22,10 @@ class RedditRepository {
 
     fun getSubredditPosts(subredditName: String): DefaultPaginator<Submission> = helper.reddit.subreddit(subredditName).posts().build()
 
+    fun getAllPosts(): DefaultPaginator<Submission> = helper.reddit.subreddit("all").posts().build()
+
+    fun getPopularPosts(): DefaultPaginator<Submission> = helper.reddit.subreddit("popular").posts().build()
+
     fun getSearchSubredditResults(query: String) = helper.reddit.searchSubredditsByName(query)
 
 }

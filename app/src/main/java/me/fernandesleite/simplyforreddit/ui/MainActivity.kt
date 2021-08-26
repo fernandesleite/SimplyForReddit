@@ -3,6 +3,7 @@ package me.fernandesleite.simplyforreddit.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -24,8 +25,22 @@ class MainActivity : AppCompatActivity() {
         val nav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
         NavigationUI.setupWithNavController(nav, navHostFragment!!.findNavController())
+        nav.setOnNavigationItemSelectedListener{
+            when(it.itemId) {
+                R.id.home -> {
+
+                    navHostFragment.findNavController().navigate(R.id.mainFragment)
+                    true
+                }
+                R.id.subs -> {
+
+                    navHostFragment.findNavController().navigate(R.id.subredditFragment)
+                    true
+                }
+                else -> true
+            }
+
+        }
 
     }
-
-
 }

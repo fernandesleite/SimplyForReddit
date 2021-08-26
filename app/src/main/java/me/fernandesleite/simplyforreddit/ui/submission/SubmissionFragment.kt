@@ -2,6 +2,7 @@ package me.fernandesleite.simplyforreddit.ui.submission
 
 import android.content.Intent
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.home.SharedSubmissionViewModel
 
@@ -27,6 +29,11 @@ class SubmissionFragment : Fragment() {
         return inflater.inflate(R.layout.submission_fragment, container, false)
     }
 
+    override fun onPause() {
+        super.onPause()
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility = View.VISIBLE
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val author: TextView = view.findViewById(R.id.author)
@@ -35,6 +42,8 @@ class SubmissionFragment : Fragment() {
         val score: TextView = view.findViewById(R.id.score)
         val commentCount: TextView = view.findViewById(R.id.commentCount)
         val subreddit: TextView = view.findViewById(R.id.subreddit)
+
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation).visibility = View.INVISIBLE
 
         sharedSubmissionViewModel.submission.observe(viewLifecycleOwner, { submissionInfo ->
             title.text = submissionInfo.title

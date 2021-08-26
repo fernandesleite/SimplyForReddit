@@ -1,5 +1,6 @@
 package me.fernandesleite.simplyforreddit.ui.home
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -14,11 +15,12 @@ class SharedSubmissionViewModel(private val repository: RedditRepository) :
     BaseSharedViewModel() {
     private lateinit var paginatorFrontPage: DefaultPaginator<Submission>
     private lateinit var paginatorSubreddit: DefaultPaginator<Submission>
-    private val uiScope = CoroutineScope(Dispatchers.Main)
     private val localListFrontPageSubmissions = mutableListOf<Submission>()
     private val localListSubredditSubmissions = mutableListOf<Submission>()
 
     private val _submission = MutableLiveData<Submission>()
+    val recyclerViewStateParcel = MutableLiveData<Parcelable>()
+
     val submission: LiveData<Submission>
         get() = _submission
 

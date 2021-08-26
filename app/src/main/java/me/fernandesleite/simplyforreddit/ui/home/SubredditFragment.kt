@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import me.fernandesleite.simplyforreddit.R
 import me.fernandesleite.simplyforreddit.ui.submission.SubmissionsAdapter
 import net.dean.jraw.models.Submission
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.core.parameter.parametersOf
 
 
 class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener {
@@ -19,7 +21,10 @@ class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener
     val args: SubredditFragmentArgs by navArgs()
 
     private val sharedSubmissionViewModel: SharedSubmissionViewModel by sharedViewModel()
-    private lateinit var adapter: SubmissionsAdapter
+    private lateinit var recyclerView: RecyclerView
+    private val adapter: SubmissionsAdapter by inject {
+        parametersOf(this)
+    }
 
     override var isLoading = false
     override fun loadMoreItems() {
@@ -27,10 +32,6 @@ class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener
         isLoading = false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        adapter = SubmissionsAdapter(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +42,8 @@ class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
+        recyclerView = view.findViewById(R.id.recycler_view)
         if (args.subreddit == "no_subreddit_selected") {
             findNavController().navigate(
                 SubredditFragmentDirections.actionSubredditFragmentToErrorFragment(
@@ -48,11 +51,10 @@ class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener
                 )
             )
         } else {
-            val toolbar = view.findViewById<Toolbar>(R.id.toolbar)
-            val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+
             setupToolbar(toolbar)
-            setupData()
-            setupRecyclerView(recyclerView)
+            setupData(recyclerView)
+            setupRecyclerView(recyclerView, adapter)
         }
     }
 
@@ -67,22 +69,25 @@ class SubredditFragment : BaseMainFragment(), SubmissionsAdapter.OnClickListener
         }
     }
 
-    private fun setupData() {
+    override fun setupData(recyclerView: RecyclerView) {
         if (adapter.itemCount <= 0) {
             sharedSubmissionViewModel.showSubreddit(args.subreddit)
         }
         // workaround using the fragment as a owner to maintain recyclerview pagination after leaving screen
-        sharedSubmissionViewModel.listOfSubredditSubmissions.observe(this, {
+        sharedSubmissionViewModel.listOfSubredditSubmissions.observe(viewLifecycleOwner, {
             adapter.submitList(it)
             isLoading = true
             adapter.notifyDataSetChanged()
+            sharedSubmissionViewModel.recyclerViewStateParcel.observe(viewLifecycleOwner, { parcelable ->
+                recyclerView.layoutManager?.onRestoreInstanceState(parcelable)
+            })
         })
     }
 
-    private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = adapter
-        calcPositionToLoadItems(recyclerView)
-        addOnScrollListener(recyclerView)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
+        recyclerViewState?.let { sharedSubmissionViewModel.recyclerViewStateParcel.value = it }
     }
 
     override fun onSubmissionClick(submission: Submission) {
